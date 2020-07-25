@@ -6,8 +6,6 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from .models import Room, Exam, UserProfile
 
-from .serializers import UserRoomJoinSerializer
-
 
 class CreateUser(CreateAPIView):
     serializer_class = ProfileSerializer
@@ -77,5 +75,18 @@ class RetrieveRoomExams(APIView):
         return Response(exams.data, status=200)
 
 
-class JoinRoom(UpdateAPIView):
-    serializer_class = UserRoomJoinSerializer
+# class JoinRoom(UpdateAPIView):
+#     serializer_class = UserRoomJoinSerializer
+#     queryset = Room.objects.all()
+#     lookup_field = 'link'
+#     lookup_url_kwarg = 'room_link'
+
+class JoinRoom(APIView):
+
+    def post(self, request, *args, **kwargs):
+        room = get_object_or_404(Room, link=kwargs.get('room_link'))
+        user = get_object_or_404(User, id=kwargs.get('user_id'))
+        user_profile = user.user_profile
+        room.participate.add(user_profile)
+        room = RoomRetrieveSerializer(instance=room)
+        return Response(room.data, status=200)

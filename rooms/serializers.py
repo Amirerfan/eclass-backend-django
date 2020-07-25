@@ -65,12 +65,16 @@ class ExamSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'start_time', 'end_time', 'room']
 
 
-class UserRoomJoinSerializer(serializers.ModelSerializer):
-    user_profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-
-    class Meta:
-        model = Room
-        field = ['id', 'user_profile']
-
-    def update(self, instance, validated_data):
-        instance.participate.add(validated_data.get('user_profile'))
+# class UserRoomJoinSerializer(serializers.ModelSerializer):
+#     user_profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+#
+#     class Meta:
+#         model = Room
+#         fields = ['id', 'user_profile']
+#         extra_kwargs = {
+#             "user_profile": {"write_only": True}
+#         }
+#
+#     def update(self, instance, validated_data):
+#         instance.participate.add(validated_data.get('user_profile'))
+#         return instance

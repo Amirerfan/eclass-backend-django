@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('room/create/', CreateRoom.as_view()),
     path('room/<int:room_id>/', RetrieveRoom.as_view()),
-    path('room/<room_link>/user/<int:user_id>/join/', JoinRoom.as_view()),
+    path('room/<slug:room_link>/user/<int:user_id>/join/', JoinRoom.as_view()),
     path('room/<int:room_id>/user/<int:user_id>/join/', JoinRoom.as_view()),
     path('rooms/<int:user_id>/', RetrieveUserRooms.as_view()),
 
