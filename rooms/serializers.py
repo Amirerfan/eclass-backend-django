@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.utils.crypto import get_random_string
 
-from .models import UserProfile, Room, Exam
+from .models import UserProfile, Room, Exam, Question
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -59,22 +59,30 @@ class RoomRetrieveSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'link', 'admin', 'participate']
 
 
-class ExamSerializer(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+
+class ExamRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exam
-        fields = ['id', 'title', 'start_time', 'end_time', 'room']
+        fields = '__all__'
 
 
-# class UserRoomJoinSerializer(serializers.ModelSerializer):
-#     user_profile = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
-#
-#     class Meta:
-#         model = Room
-#         fields = ['id', 'user_profile']
-#         extra_kwargs = {
-#             "user_profile": {"write_only": True}
-#         }
-#
-#     def update(self, instance, validated_data):
-#         instance.participate.add(validated_data.get('user_profile'))
-#         return instance
+class ExamSerializer(serializers.ModelSerializer):
+    questions = serializers.ListField(write_only=True)
+
+    class Meta:
+        model = Exam
+        fields = ['id', 'title', 'start_time', 'end_time', 'room', 'questions']
+
+    def create(self, validated_data):
+        questions = validated_data.pop('questions')
+        exam = Exam.objects.create(**validated_data)
+
+        for question in questions:
+            Question.objects.create(exam=exam, **question)
+
+        return exam

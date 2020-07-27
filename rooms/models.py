@@ -28,6 +28,7 @@ class Room(models.Model):
 
 
 class Question(models.Model):
+    number = models.IntegerField()
     text = models.CharField(max_length=500)
     credit = models.IntegerField()
     exam = models.ForeignKey('Exam', on_delete=models.CASCADE, related_name="question")

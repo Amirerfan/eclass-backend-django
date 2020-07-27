@@ -1,4 +1,4 @@
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, get_object_or_404, UpdateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, get_object_or_404
 from .serializers import ProfileSerializer, AuthSerializer, RoomCreateSerializer, RoomRetrieveSerializer, \
     ExamSerializer
 from rest_framework.response import Response
@@ -75,12 +75,6 @@ class RetrieveRoomExams(APIView):
         return Response(exams.data, status=200)
 
 
-# class JoinRoom(UpdateAPIView):
-#     serializer_class = UserRoomJoinSerializer
-#     queryset = Room.objects.all()
-#     lookup_field = 'link'
-#     lookup_url_kwarg = 'room_link'
-
 class JoinRoom(APIView):
 
     def post(self, request, *args, **kwargs):
@@ -90,3 +84,7 @@ class JoinRoom(APIView):
         room.participate.add(user_profile)
         room = RoomRetrieveSerializer(instance=room)
         return Response(room.data, status=200)
+
+
+class ExamCreate(CreateAPIView):
+    serializer_class = ExamSerializer
