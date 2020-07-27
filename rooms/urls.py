@@ -1,11 +1,12 @@
 from django.urls import path
 
 from .views import CreateUser, Authentication, CreateRoom, RetrieveRoom, CreateExam, RetrieveExam, \
-    RetrieveUserRooms, RetrieveRoomExams, JoinRoom
+    RetrieveUserRooms, RetrieveRoomExams, JoinRoom, RetrieveUser
 
 urlpatterns = [
     path('user/create/', CreateUser.as_view()),
     path('user/login/', Authentication.as_view()),
+    path('user/<int:user_id>/', RetrieveUser.as_view()),
 
     path('room/create/', CreateRoom.as_view()),
     path('room/<int:room_id>/', RetrieveRoom.as_view()),

@@ -28,6 +28,13 @@ class Authentication(APIView):
             return Response({'error': 'Invalid Username or Password'}, status=400)
 
 
+class RetrieveUser(RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    queryset = UserProfile.objects.all()
+    lookup_field = 'id'
+    lookup_url_kwarg = 'user_id'
+
+
 class CreateRoom(CreateAPIView):
     serializer_class = RoomCreateSerializer
 
