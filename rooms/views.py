@@ -95,3 +95,17 @@ class JoinRoom(APIView):
 
 class ExamCreate(CreateAPIView):
     serializer_class = ExamSerializer
+
+
+class AddAdminToRoom(APIView):
+
+    def post(self, request, *args, **kwargs):
+        room = get_object_or_404(Room, id=kwargs.get('room_id'))
+        user = get_object_or_404(User, id=kwargs.get('user_id'))
+        user_profile = user.user_profile
+        room.admin.add(user_profile)
+
+        room.participate.remove(user.user_profile)
+
+        room = RoomRetrieveSerializer(instance=room)
+        return Response(room.data, status=200)
