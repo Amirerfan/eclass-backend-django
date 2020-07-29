@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import CreateUser, Authentication, CreateRoom, RetrieveRoom, CreateExam, RetrieveExam, \
-    RetrieveUserRooms, RetrieveRoomExams, JoinRoom, RetrieveUser, AddAdminToRoom
+    RetrieveUserRooms, RetrieveRoomExams, JoinRoom, RetrieveUser, AddAdminToRoom, RetrieveExamQuestions
 
 urlpatterns = [
     path('user/create/', CreateUser.as_view()),
@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('exam/create/', CreateExam.as_view()),
     path('exam/<int:exam_id>/', RetrieveExam.as_view()),
+    path('exam/<int:exam_id>/questions/', RetrieveExamQuestions.as_view()),
     path('exams/<int:room_id>/', RetrieveRoomExams.as_view()),
 
 ]

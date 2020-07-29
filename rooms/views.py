@@ -1,6 +1,6 @@
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, get_object_or_404
 from .serializers import ProfileSerializer, AuthSerializer, RoomCreateSerializer, RoomRetrieveSerializer, \
-    ExamSerializer
+    ExamSerializer, QuestionSerializer, ExamRetrieveSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
@@ -109,3 +109,18 @@ class AddAdminToRoom(APIView):
 
         room = RoomRetrieveSerializer(instance=room)
         return Response(room.data, status=200)
+
+
+class RetrieveQuestion(RetrieveAPIView):
+    serializer_class = QuestionSerializer
+
+
+class RetrieveExamQuestions(APIView):
+
+    def get(self, request, *args, **kwargs):
+        exam = get_object_or_404(Exam, id=kwargs.get('exam_id'))
+        questions = exam.question
+
+        exam = ExamRetrieveSerializer(instance=exam).data
+        questions = QuestionSerializer(instance=questions, many=True).data
+        return Response({'exam': exam, 'questions': questions }, status=200)
