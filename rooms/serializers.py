@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.utils.crypto import get_random_string
 
-from .models import UserProfile, Room, Exam, Question
+from .models import UserProfile, Room, Exam, Question, ExamAnswer, Answer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -86,3 +86,21 @@ class ExamSerializer(serializers.ModelSerializer):
             Question.objects.create(exam=exam, **question)
 
         return exam
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    answers = serializers.ListField(write_only=True)
+
+    class Meta:
+        model = ExamAnswer
+        fields = ['id', 'user_profile', 'exam', 'answers']
+
+    def create(self, validated_data):
+        answers = validated_data.pop('answers')
+        exam_answer = ExamAnswer.objects.create(**validated_data)
+
+        for answer in answers:
+            question = Question.objects.get(id=answer.pop('question'))
+            Answer.objects.create(exam_answer=exam_answer, question=question, **answer)
+
+        return exam_answer

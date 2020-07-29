@@ -1,6 +1,6 @@
 from rest_framework.generics import CreateAPIView, RetrieveAPIView, get_object_or_404
 from .serializers import ProfileSerializer, AuthSerializer, RoomCreateSerializer, RoomRetrieveSerializer, \
-    ExamSerializer, QuestionSerializer, ExamRetrieveSerializer
+    ExamSerializer, QuestionSerializer, ExamRetrieveSerializer, AnswerSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
@@ -123,4 +123,8 @@ class RetrieveExamQuestions(APIView):
 
         exam = ExamRetrieveSerializer(instance=exam).data
         questions = QuestionSerializer(instance=questions, many=True).data
-        return Response({'exam': exam, 'questions': questions }, status=200)
+        return Response({'exam': exam, 'questions': questions}, status=200)
+
+
+class CreateAnswers(CreateAPIView):
+    serializer_class = AnswerSerializer
